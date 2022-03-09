@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-opgave = 3
+opgave = 4
 
 #Tag dette binære billede:
 
@@ -103,7 +103,7 @@ if opgave == 3:
     cv2.waitKey(0)
 #Lav et lille program der kan segmentere æblet i billedet "apple.jpg". Det røde "kød" på æblet skal blive hvidt, og resten, inkl. stilk og blad, skal blive sort.
 if opgave == 4:
-    apple = cv2.imread(r'C:\Users\Muku\Documents\robotic_sensing_Fag\Lektion_4\materialer\apple.jpg')
+    apple = cv2.imread(r'C:\Users\mikip\Documents\Fag_Perception\Lektion_4\materialer\apple.jpg')
     hsvApple = cv2.cvtColor(apple, cv2.COLOR_BGR2HSV)
 
     # first cut out the apple part
