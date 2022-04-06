@@ -5,58 +5,45 @@ import numpy as np
 
 
 def grassfire_transform(img):
-    burn_num = 1
-    grassfire = np.zeros_like(img, dtype=np.uint8)
+    burn_num = 50
+    grassfire = np.zeros(img.shape, dtype=np.uint8)
     for y, row in enumerate(img):
         for x, pixel in enumerate(row):
             if grassfire[y, x] == 0:
                 if connectivity(img, [y, x], burn_num, grassfire) == 1:
-                    burn_num += 1
-            else:
-                print("nice")
+                    burn_num += 50
     print(burn_num)
     return grassfire
 
 
 def connectivity(img, coordinate, burn_num, grassfire):
     burn_queue = deque()
-    succ = 0
+    success = 0
     if img[coordinate[0], coordinate[1]] == 255:
         burn_queue.append(coordinate)
-        succ = 1
+        success = 1
     while len(burn_queue) > 0:
-        coordinate = burn_queue.pop()
-        grassfire[coordinate[0], coordinate[1]] = burn_num
+        newcord = burn_queue.pop()
+        grassfire[newcord[0], newcord[1]] = burn_num
+        for i in range(-1, 2, 2):
+            if img[newcord[0], newcord[1] + i] == 255:
+                if grassfire[newcord[0], newcord[1] + i] == 0:
+                    burn_queue.append([newcord[0], newcord[1] + i])
+            if img[newcord[0] + i, newcord[1]] == 255:
+                if grassfire[newcord[0] + i, newcord[1]] == 0:
+                    burn_queue.append([newcord[0] + i, newcord[1]])
 
-        if img[coordinate[0], coordinate[1] - 1] == 255:
-            burn_queue.append([coordinate[0], coordinate[1] - 1])
-            print("yup")
-
-        if img[coordinate[0] - 1, coordinate[1]] == 255:
-            burn_queue.append([coordinate[0] - 1, coordinate[1]])
-            print("yup2")
-
-        if img[coordinate[0], coordinate[1]] + 1 == 255:
-            burn_queue.append([coordinate[0], coordinate[1] + 1])
-            print("yup3")
-
-        if img[coordinate[0], coordinate[1]] + 1 == 255:
-            burn_queue.append([coordinate[0], coordinate[1] + 1])
-            print("yup4")
-
-    return succ
+    return success
 
 
 # Find de fire objekter i billedet 'tools-black.jpg' (output: fire hvide BLOBs, sort baggrund)
-full_image = cv2.imread(r'C:\Users\mikip\Documents\Fag_Perception\Lektion_5\materialer\tools-black.jpg',
+full_image = cv2.imread(r'C:\Users\Muku\Documents\robotic_sensing_Fag\Lektion_5\materialer\tools-black.jpg',
                         cv2.IMREAD_GRAYSCALE)
 
 medianBlur = cv2.medianBlur(full_image, 15)
-ret, threshold = cv2.threshold(full_image, 115, 255, cv2.THRESH_BINARY)
-full_image = cv2.imread(r'C:\Users\mikip\Documents\Fag_Perception\Lektion_5\materialer\Untitled.png',
-                        cv2.IMREAD_GRAYSCALE)
+ret, threshold = cv2.threshold(medianBlur, 150, 255, cv2.THRESH_BINARY)
 
-newimg = grassfire_transform(full_image)
+newimg = grassfire_transform(threshold)
 # # størrelser
 # scale = 0.3
 # delta = 1
@@ -71,9 +58,9 @@ newimg = grassfire_transform(full_image)
 #
 # grad = cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
 
-#cv2.imshow("original", full_image)
-#cv2.imshow("median", medianBlur)
-#cv2.imshow("Threshold", threshold)
+# cv2.imshow("original", full_image)
+# cv2.imshow("median", medianBlur)
+cv2.imshow("Threshold", threshold)
 cv2.imshow("new", newimg)
 # cv2.imshow("sobel", grad)
 # cv2.imshow("Final", finalApple)

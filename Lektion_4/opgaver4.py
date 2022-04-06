@@ -117,7 +117,7 @@ if opgave == 4:
     mask2 = cv2.inRange(hsvApple, lowerLimit2,  upperLimit2)
     appleBin = mask1+mask2
 
-    # then use closing to remove the hole and stalk
+    # then use closing method to remove the hole and stalk
     strucElem1 = np.ones((5, 25), dtype=int)
     # since the hole has a different shape than the stalk I am using a different SE for dilation
     strucElem2 = np.ones((25, 25), dtype=int)
