@@ -31,8 +31,8 @@ pictures = np.empty(n_pics, dtype=object)
 grey = pictures
 
 for i in range(len(pictures)):
-    pictures[i] = cv.imread(Path.cwd().as_posix()+'/materialer/Trompet/trumpet'+str(i+1)+'.jpg')
-    grey[i] = cv.imread(Path.cwd().as_posix() + '/materialer/Trompet/trumpet' + str(i + 1) + '.jpg', cv.IMREAD_GRAYSCALE)
+    pictures[i] = cv.imread(Path.cwd().as_posix()+'/materialer/trumpet/trumpet'+str(i+1)+'.jpg')
+    grey[i] = cv.imread(Path.cwd().as_posix() + '/materialer/trumpet/trumpet' + str(i + 1) + '.jpg', cv.IMREAD_GRAYSCALE)
 
 ret, threshold = cv.threshold(grey[1], 210, 255, cv.THRESH_BINARY)
 contours, hierarchy = cv.findContours(image=threshold, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
