@@ -28,6 +28,7 @@ class Features:
     # startup for initialising the features
     def __init__(self, instrument_type):
         self.type = instrument_type
+        self.holes = []
         self.circularity = []
         self.compactness = []
         self.elongation = []
@@ -35,9 +36,10 @@ class Features:
         self.intensity = []
 
     # function for saving new contours into the training data
-    def save_cnt(self, contour, img):
+    def save_cnt(self, contour, n_children, img):
 
         # Calculate feature properties
+        self.holes.append(n_children)
         area = cv.contourArea(contour)
         perimeter = cv.arcLength(contour, True)
 
@@ -46,8 +48,8 @@ class Features:
 
         self.circularity.append(4 * np.pi * area / (perimeter**2))
         self.compactness.append(area / (min_width * min_height))
-        self.elongation.append(min(min_width, min_height) / max(min_width, min_height))
-        self.thiness.append((4 * np.pi * area) / (perimeter**2))
+        self.elongation.append(min(min_width, min_height) / max(min_width, min_height)*2)
+        self.thiness.append((4 * np.pi * area) / (perimeter**2)*2)
 
         # Intensity found in the image
         mask = np.zeros(img.shape, np.uint8)
@@ -56,34 +58,45 @@ class Features:
 
     # used for analysing the data extracted from training data
     def export_matlab(self, file_name):
-        savemat(file_name, {f'circularity': self.circularity, f'compactness': self.compactness,
+        savemat(file_name, {f'holes': self.holes, f'circularity': self.circularity, f'compactness': self.compactness,
                             f'elongation': self.elongation, f'thiness': self.thiness, 'intensity': self.intensity})
 
 
 # importing the pictures
 instruments = ['guitar', 'bass', 'trumpet']
-n_pics = 8
+n_pics = 15
 
 for instrument in instruments:
     # Initiate json files and Features class
     outfile = open(f'data_{instrument}.json', 'w')
     f = Features(instrument)
     for i in range(n_pics):
-        picture = cv.imread(f'{Path.cwd().as_posix()}/materialer/{instrument}/{instrument}{i+1}.jpg')
-        grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE)
+        picture = cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg')
+        grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE)
 
         # Image processing
-        blur = cv.medianBlur(grey, 21)
-        ret, threshold = cv.threshold(blur, 210, 255, cv.THRESH_BINARY_INV)
-        closed = close_image(threshold, cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)),
-                             cv.getStructuringElement(cv.MORPH_ELLIPSE, (35, 35)))
+        hsvImg = cv.cvtColor(picture, cv.COLOR_BGR2HLS)
+        blur = cv.medianBlur(hsvImg, 21)
+        threshold = cv.inRange(blur, np.array([0, 0, 0]), np.array([255, 235, 255]))
+
+        opened = open_image(threshold, cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5)),
+                             cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)))
 
         # Extract contours
-        contours, hierarchy = cv.findContours(image=closed, mode=cv.RETR_EXTERNAL, method=cv.CHAIN_APPROX_NONE)
+        contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
+        hierarchy = hierarchy[0]
+        outer = hierarchy[np.array(hierarchy[:][:, 3] == -1)]
+
+        # Print contour number in case something messed up
+        print(f'{instrument}{i+1} contours: {len(outer)}')
 
         # Save the contours into the Features class
-        for cnt in contours:
-            f.save_cnt(cnt, grey)
+        for heir in outer:
+            # find the parentless contours
+            cnt = contours[abs(heir[0]) - 1]
+            # write down the children attached to it
+            inner = hierarchy[np.array(hierarchy[:][:, 3] == abs(heir[0]) - 1)]
+            f.save_cnt(cnt, len(inner), grey)
 
     # write all the data into the .json and .mat files
     jsonStr = json.dumps(f.__dict__, indent=4)

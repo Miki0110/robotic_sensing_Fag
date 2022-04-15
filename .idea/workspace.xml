@@ -4,10 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2025abb1-db25-47ae-a7d6-95ac0a1d6b7a" name="Changes" comment="lecture 4">
-      <change afterPath="$PROJECT_DIR$/Lektion_8/opgaver8.py" afterDir="false" />
+    <list default="true" id="2025abb1-db25-47ae-a7d6-95ac0a1d6b7a" name="Changes" comment="The detector can now detect trained data to be a specific type">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lektion_6/opgaver6.mlx" beforeDir="false" afterPath="$PROJECT_DIR$/Lektion_6/opgaver6.mlx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_bass.json" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_bass.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_bass.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_bass.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_guitar.json" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_guitar.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_guitar.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_guitar.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_trumpet.json" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_trumpet.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/data_trumpet.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/data_trumpet.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/instrument_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/instrument_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/instrument_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/instrument_detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass6.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass6.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/bass/bass8.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/bass/bass8.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm6.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm6.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/drumm/drumm8.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/drumm/drumm8.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar6.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar6.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/guitar/guitar8.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/guitar/guitar8.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet3.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet4.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet5.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet6.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet6.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet7.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/materialer/trumpet/trumpet8.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/materialer/training_data/trumpet/trumpet8.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/test_delete.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Workshop/test_imageprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Workshop/test_imageprocess.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,20 +88,25 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
-  <component name="RunManager" selected="Python.opgaver8">
-    <configuration name="opgaver4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="robotic_sensing_Fag" />
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mikip\Documents\Fag_Perception\Workshop\materialer\training_data" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.instrument_detector">
+    <configuration name="instrument_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Fag_Perception" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Lektion_4" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Workshop" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lektion_4/opgaver4.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Workshop/instrument_data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -69,8 +115,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="opgaver5" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="robotic_sensing_Fag" />
+    <configuration name="instrument_detector" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Fag_Perception" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Workshop" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Workshop/instrument_detector.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Fag_Perception" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -81,7 +148,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lektion_5/opgaver5.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lektion_5/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -90,7 +157,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="opgaver8" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="test_delete" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Fag_Perception" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -98,11 +165,32 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Lektion_8" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Workshop" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Lektion_8/opgaver8.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Workshop/test_delete.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_imageprocess" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Fag_Perception" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Workshop" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Workshop/test_imageprocess.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -113,9 +201,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.opgaver8" />
-        <item itemvalue="Python.opgaver5" />
-        <item itemvalue="Python.opgaver4" />
+        <item itemvalue="Python.instrument_detector" />
+        <item itemvalue="Python.instrument_data" />
+        <item itemvalue="Python.test_imageprocess" />
+        <item itemvalue="Python.test_delete" />
+        <item itemvalue="Python.test (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -135,7 +225,28 @@
       <option name="project" value="LOCAL" />
       <updated>1646213621433</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="lecture 8">
+      <created>1648631810500</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1648631810500</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added in jsonfiles for train data">
+      <created>1649842967969</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1649842967969</updated>
+    </task>
+    <task id="LOCAL-00004" summary="The detector can now detect trained data to be a specific type">
+      <created>1649965665045</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1649965665045</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,6 +262,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="lecture 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="lecture 4" />
+    <MESSAGE value="lecture 8" />
+    <MESSAGE value="added in jsonfiles for train data" />
+    <MESSAGE value="The detector can now detect trained data to be a specific type" />
+    <option name="LAST_COMMIT_MESSAGE" value="The detector can now detect trained data to be a specific type" />
   </component>
 </project>

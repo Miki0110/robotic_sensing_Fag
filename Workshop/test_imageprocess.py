@@ -50,30 +50,37 @@ class Features:
 # importing the pictures
 instruments = ['guitar', 'bass', 'trumpet']
 instrument = instruments[2]
-PicNum = 7
-n_pics = 8
+PicNum = 9
+n_pics = 15
 pictures = []
 grey = []
 
 for i in range(n_pics):
-    pictures.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/{instrument}/{instrument}{i+1}.jpg'))
-    grey.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE))
+    pictures.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg'))
+    #grey.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE))
 
-blur = cv.medianBlur(grey[PicNum], 21)
-ret, threshold = cv.threshold(blur, 210, 255, cv.THRESH_BINARY_INV)
-closed = close_image(threshold, cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)),cv.getStructuringElement(cv.MORPH_ELLIPSE, (35, 35)))
-contours, hierarchy = cv.findContours(image=closed, mode=cv.RETR_EXTERNAL, method=cv.CHAIN_APPROX_SIMPLE)
-
+#blur = cv.medianBlur(grey[PicNum], 21)
+hsvImg = cv.cvtColor(pictures[PicNum], cv.COLOR_BGR2HLS)
+blurC = cv.medianBlur(hsvImg, 21)
+sensitivity = 20
+thresholdcolor = cv.inRange(blurC, np.array([0,0,0]), np.array([255,255-sensitivity,255]))
+#ret, threshold = cv.threshold(blur, 225, 255, cv.THRESH_BINARY_INV)
+opened = open_image(thresholdcolor, cv.getStructuringElement(cv.MORPH_ELLIPSE, (10, 10)),cv.getStructuringElement(cv.MORPH_ELLIPSE, (20, 20)))
+contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
+hierarchy = hierarchy[0]
 image_copy = pictures[PicNum].copy()
-cv.drawContours(image_copy, contours, -1, (0, 255, 0), 3)
-
 
 print(len(contours))
-for i in range(len(contours)):
-    cnt = contours[i]
+print(hierarchy)
+outer = hierarchy[np.array(hierarchy[:][:,3] == -1)]
+
+for heir in outer:
+    cnt = contours[abs(heir[0])-1]
+    inner = hierarchy[np.array(hierarchy[:][:,3] == abs(heir[0])-1)]
+    print(len(inner))
+    cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 5)
+
     #f = Features(cnt, grey[PicNum])
-
-
 
 
 
@@ -84,8 +91,9 @@ for i in range(len(contours)):
 #
 #     RotatedRect, box = cv.minAreaRect(cnt)
 #     f.elongation = max(box.size.width / box.size.height, box.size.height / box.size.width)
-resize_image(pictures[PicNum], 'original', 0.4)
-resize_image(image_copy, 'threshold', 0.4)
+#resize_image(blur, 'blur', 0.4)
+#resize_image(threshold, 'threshold', 0.4)
+resize_image(image_copy, 'final', 0.4)
 cv.waitKey(0)
 
 
