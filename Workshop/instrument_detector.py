@@ -2,14 +2,14 @@ from pathlib import Path
 import cv2 as cv
 import numpy as np
 import json
-from collections import deque
 
 
 # Feature space
 class Features:
     # function for saving new contours into the training data
     def __init__(self, contour, n_children, img):
-        self.holes = n_children
+        # Save the amount of holes
+        self.holes = n_children/10      # Somewhat normalised
 
         # Calculate feature properties
         area = cv.contourArea(contour)
@@ -28,6 +28,7 @@ class Features:
         cv.drawContours(mask, [cnt], 0, 255, -1)
         self.intensity = ((cv.mean(img, mask=mask)[0])/255)     # Divide by 255 to normalise
 
+    # function creating a vector, used for calculating distance
     def return_vector(self):
         feature_vector = []
         feature_vector.append(self.holes)
@@ -61,76 +62,91 @@ def close_image(input_image, e_kernel, d_kernel):
 
 # Check distance
 def check_distance(test_data):
-    instruments = ['guitar', 'bass', 'trumpet']
+    # defining instruments, and the features
+    instruments = ['guitar', 'bass', 'trumpet', 'drumm']
     feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'thiness', 'intensity']
     instrument_data = []
-    guitar_distance = 0
-    bass_distance = 0
-    trumpet_distance = 0
+    guitar_distance,bass_distance,trumpet_distance,drumm_distance = 0,0,0,0
 
+    # Load data from training set
     for instrument in instruments:
         instrument_data.append(json.load(open(f'data_{instrument}.json', 'r')))
 
+    # Calculate nearest neighbour
     for num in range(len(feature_data)):
         guitar_distance += (pow(test_data[num]-np.array(instrument_data[0][feature_data[num]], dtype='float64'), 2))
         bass_distance += (pow(test_data[num]-np.array(instrument_data[1][feature_data[num]], dtype='float64'), 2))
         trumpet_distance += (pow(test_data[num] - np.array(instrument_data[2][feature_data[num]], dtype='float64'), 2))
-    print(sorted(np.sqrt(guitar_distance)))
-    print(sorted(np.sqrt(bass_distance)))
-    print(sorted(np.sqrt(trumpet_distance)))
+        drumm_distance += (pow(test_data[num] - np.array(instrument_data[3][feature_data[num]], dtype='float64'), 2))
+
     guitar_distance = min(np.sqrt(guitar_distance))
     bass_distance = min(np.sqrt(bass_distance))
     trumpet_distance = min(np.sqrt(trumpet_distance))
+    drumm_distance = min(np.sqrt(drumm_distance))
 
-    for i in range(3):
-        if guitar_distance < bass_distance and guitar_distance < trumpet_distance:
-            print(f'guitar_distance: {guitar_distance}')
-            return "guitar"
-        elif bass_distance < guitar_distance and bass_distance < trumpet_distance:
-            print(f'bass_distance: {bass_distance}')
-            return "bass"
-        else:
-            print(f'trumpet_distance: {trumpet_distance}')
-            return "trumpet"
+    # Return the closest value
+    if guitar_distance < bass_distance and guitar_distance < trumpet_distance and guitar_distance < drumm_distance:
+        print(f'guitar_distance: {guitar_distance}')
+        return "guitar"
+    elif bass_distance < guitar_distance and bass_distance < trumpet_distance and bass_distance < drumm_distance:
+        print(f'bass_distance: {bass_distance}')
+        return "bass"
+    elif trumpet_distance < guitar_distance and trumpet_distance < bass_distance and trumpet_distance < drumm_distance:
+        print(f'trumpet_distance: {trumpet_distance}')
+        return "trumpet"
+    else:
+        print(f'drumm_distance: {drumm_distance}')
+        return 'drumm'
 
 
-# importing the pictures
-n_pics = 6
-pictures = []
-grey = []
-image_copy = []
+# define amount of pictures to import
+n_pics = 8
 
 for i in range(n_pics):
-    pictures.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg'))
-    grey.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg', cv.IMREAD_GRAYSCALE))
+    # Read folder and import images
+    img = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg')
+    grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg', cv.IMREAD_GRAYSCALE)
+    image_copy = img.copy()
 
     # Image processing
-    hsvImg = cv.cvtColor(pictures[i], cv.COLOR_BGR2HLS)
-    blur = cv.medianBlur(hsvImg, 21)
-    threshold = cv.inRange(blur, np.array([0, 0, 0]), np.array([255, 235, 255]))
+    hsvImg = cv.cvtColor(img, cv.COLOR_BGR2HLS)
+    blur = cv.medianBlur(hsvImg, 7)
+    # HSL thresholding is used due to the background always being white
+    # a different method is needed if live footage was used
+    threshold = cv.inRange(blur, np.array([0, 0, 0]), np.array([255, 225, 255]))
 
-    opened = open_image(threshold, cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5)),
-                        cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)))
+    # Using morphology to remove noise (mostly due to watermarks)
+    opened = open_image(threshold, cv.getStructuringElement(cv.MORPH_ELLIPSE, (10, 10)),
+                        cv.getStructuringElement(cv.MORPH_ELLIPSE, (10, 10)))
 
     # Extract contours
-    contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
-    image_copy.append(pictures[i].copy())
+    contours, hierarchy = cv.findContours(image=threshold, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
     hierarchy = hierarchy[0]
-    outer = hierarchy[np.array(hierarchy[:][:, 3] == -1)]
 
-    # Save the contours into the Features class
-    for heir in outer:
-        # find the parentless contours
-        cnt = contours[abs(heir[0]) - 1]
-        # write down the children attached to it
-        inner = hierarchy[np.array(hierarchy[:][:, 3] == abs(heir[0]) - 1)]
-        print(f'number: {i+1}, children: {len(inner)}')
-        f = Features(cnt, len(inner), grey[i])
-        cnt_features = f.return_vector()
-        cnt_type = check_distance(cnt_features)
+    # Find the largest contour
+    outer = 0
+    largest_a = 0
+    for n in range(len(hierarchy)):
+        if np.array(hierarchy[n][3] == -1):
+            a = cv.contourArea(contours[n])
+            if largest_a < a:
+                largest_a = a
+                outer = n
+    cnt = contours[outer]
 
-        cv.drawContours(image_copy[i], cnt, 3, (255, 0, 0), 1)
-        cv.putText(image_copy[i], f'{cnt_type}', (15,35), cv.FONT_HERSHEY_PLAIN, 3, (0,0,255), 3, cv.LINE_AA)
-        resize_image(image_copy[i], f'Instrument{i+1} result', 0.8)
+    # If statement looking at how many children the contour has
+    holes = hierarchy[np.array(hierarchy[:][:, 3] == outer)]
+    print(f'holes: {len(holes)}')
+
+    # Save data into the feature class
+    f = Features(cnt, len(holes), grey)
+    cnt_features = f.return_vector()
+    # compare nearest neighbour to training data
+    cnt_type = check_distance(cnt_features)
+
+    # Draw and show results
+    cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 3)
+    cv.putText(image_copy, f'{cnt_type}', (15,35), cv.FONT_HERSHEY_PLAIN, 3, (0,0,255), 3, cv.LINE_AA)
+    resize_image(image_copy, f'Instrument{i+1} result', 0.8)
 
 cv.waitKey(0)

@@ -2,7 +2,10 @@ from pathlib import Path
 import cv2 as cv
 import numpy as np
 
-# Simple function for diplaying image
+# This file is just to check image processing
+
+
+# Simple function for displaying image
 def resize_image(image, image_name, procent):
     [height, width] = [image.shape[0], image.shape[1]]
     [height, width] = [procent * height, procent * width]
@@ -48,9 +51,9 @@ class Features:
 
 
 # importing the pictures
-instruments = ['guitar', 'bass', 'trumpet']
-instrument = instruments[2]
-PicNum = 9
+instruments = ['guitar', 'bass', 'trumpet', 'drumm']
+instrument = instruments[3]
+PicNum = 4
 n_pics = 15
 pictures = []
 grey = []
@@ -65,20 +68,25 @@ blurC = cv.medianBlur(hsvImg, 21)
 sensitivity = 20
 thresholdcolor = cv.inRange(blurC, np.array([0,0,0]), np.array([255,255-sensitivity,255]))
 #ret, threshold = cv.threshold(blur, 225, 255, cv.THRESH_BINARY_INV)
-opened = open_image(thresholdcolor, cv.getStructuringElement(cv.MORPH_ELLIPSE, (10, 10)),cv.getStructuringElement(cv.MORPH_ELLIPSE, (20, 20)))
-contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
+opened = open_image(thresholdcolor, cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5)),
+                    cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)))
+contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_CCOMP, method=cv.CHAIN_APPROX_NONE)
 hierarchy = hierarchy[0]
 image_copy = pictures[PicNum].copy()
 
-print(len(contours))
-print(hierarchy)
-outer = hierarchy[np.array(hierarchy[:][:,3] == -1)]
+outer = 0
+largest_a = 0
+for i in range(len(hierarchy)):
+    if np.array(hierarchy[i][3] == -1):
+        a = cv.contourArea(contours[i])
+        if largest_a < a:
+            largest_a = a
+            outer = i
 
-for heir in outer:
-    cnt = contours[abs(heir[0])-1]
-    inner = hierarchy[np.array(hierarchy[:][:,3] == abs(heir[0])-1)]
-    print(len(inner))
-    cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 5)
+cnt = contours[outer]
+holes = hierarchy[np.array(hierarchy[:][:,3] == outer)]
+
+cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 5)
 
     #f = Features(cnt, grey[PicNum])
 
@@ -91,8 +99,9 @@ for heir in outer:
 #
 #     RotatedRect, box = cv.minAreaRect(cnt)
 #     f.elongation = max(box.size.width / box.size.height, box.size.height / box.size.width)
-#resize_image(blur, 'blur', 0.4)
-#resize_image(threshold, 'threshold', 0.4)
+resize_image(blurC, 'blur', 0.4)
+resize_image(thresholdcolor, 'threshold', 0.4)
+resize_image(opened, 'opened', 0.4)
 resize_image(image_copy, 'final', 0.4)
 cv.waitKey(0)
 
