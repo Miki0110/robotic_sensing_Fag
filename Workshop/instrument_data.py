@@ -73,7 +73,7 @@ n_pics = 15
 
 for instrument in instruments:
     # Initiate json files and Features class
-    outfile = open(f'data_{instrument}.json', 'w')
+    outfile = open(f'./training_data/data_{instrument}.json', 'w')
     f = Features(instrument)
 
     # Go through the training data 1 by 1
@@ -120,5 +120,5 @@ for instrument in instruments:
     # write all the data into the .json and .mat files
     jsonStr = json.dumps(f.__dict__, indent=4)
     outfile.write(jsonStr)
-    f.export_matlab(f'data_{instrument}.mat')
+    f.export_matlab(f'./matlab/data_{instrument}.mat')
 

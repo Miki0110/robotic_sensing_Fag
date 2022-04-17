@@ -61,16 +61,17 @@ def close_image(input_image, e_kernel, d_kernel):
 
 
 # Check distance
-def check_distance(test_data):
+def check_distance(test_data, k_size):
     # defining instruments, and the features
     instruments = ['guitar', 'bass', 'trumpet', 'drumm']
     feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'thiness', 'intensity']
     instrument_data = []
-    guitar_distance,bass_distance,trumpet_distance,drumm_distance = 0,0,0,0
+    guitar_distance, bass_distance, trumpet_distance, drumm_distance = 0, 0, 0, 0
+    a = [0, 0, 0, 0]
 
     # Load data from training set
     for instrument in instruments:
-        instrument_data.append(json.load(open(f'data_{instrument}.json', 'r')))
+        instrument_data.append(json.load(open(f'./training_data/data_{instrument}.json', 'r')))
 
     # Calculate nearest neighbour
     for num in range(len(feature_data)):
@@ -78,24 +79,39 @@ def check_distance(test_data):
         bass_distance += (pow(test_data[num]-np.array(instrument_data[1][feature_data[num]], dtype='float64'), 2))
         trumpet_distance += (pow(test_data[num] - np.array(instrument_data[2][feature_data[num]], dtype='float64'), 2))
         drumm_distance += (pow(test_data[num] - np.array(instrument_data[3][feature_data[num]], dtype='float64'), 2))
+    # Sort data
+    guitar_distance = sorted((np.sqrt(guitar_distance)))
+    bass_distance = sorted((np.sqrt(bass_distance)))
+    trumpet_distance = sorted((np.sqrt(trumpet_distance)))
+    drumm_distance = sorted((np.sqrt(drumm_distance)))
 
-    guitar_distance = min(np.sqrt(guitar_distance))
-    bass_distance = min(np.sqrt(bass_distance))
-    trumpet_distance = min(np.sqrt(trumpet_distance))
-    drumm_distance = min(np.sqrt(drumm_distance))
+    # Check for the k nearest and return which is more common
+    for i in range(k_size):
+        if guitar_distance[0] < bass_distance[0] and guitar_distance[0] < trumpet_distance[0] and guitar_distance[0] < drumm_distance[0]:
+            guitar_distance.remove(guitar_distance[0])
+            a[0] += 1
+        elif bass_distance[0] < guitar_distance[0] and bass_distance[0] < trumpet_distance[0] and bass_distance[0] < drumm_distance[0]:
+            bass_distance.remove(bass_distance[0])
+            a[1] += 1
+        elif trumpet_distance[0] < guitar_distance[0] and trumpet_distance[0] < bass_distance[0] and trumpet_distance[0] < drumm_distance[0]:
+            trumpet_distance.remove(trumpet_distance[0])
+            a[2] += 1
+        else:
+            drumm_distance.remove(drumm_distance[0])
+            a[3] += 1
 
-    # Return the closest value
-    if guitar_distance < bass_distance and guitar_distance < trumpet_distance and guitar_distance < drumm_distance:
-        print(f'guitar_distance: {guitar_distance}')
+    # This is a bit messy, but my tiny brain can't think of a nicer way
+    if a[0] > a[1] and a[0] > a[2] and a[0] > a[3]:
+        print(f'guitar chance: {a[0]} / {k_size}')
         return "guitar"
-    elif bass_distance < guitar_distance and bass_distance < trumpet_distance and bass_distance < drumm_distance:
-        print(f'bass_distance: {bass_distance}')
+    elif a[1] > a[0] and a[1] > a[2] and a[1] > a[3]:
+        print(f'bass chance: {a[1]} / {k_size}')
         return "bass"
-    elif trumpet_distance < guitar_distance and trumpet_distance < bass_distance and trumpet_distance < drumm_distance:
-        print(f'trumpet_distance: {trumpet_distance}')
+    elif a[2] > a[0] and a[2] > a[1] and a[2] > a[3]:
+        print(f'trumpet chance: {a[2]} / {k_size}')
         return "trumpet"
     else:
-        print(f'drumm_distance: {drumm_distance}')
+        print(f'drumm chance: {a[3]} / {k_size}')
         return 'drumm'
 
 
@@ -142,7 +158,7 @@ for i in range(n_pics):
     f = Features(cnt, len(holes), grey)
     cnt_features = f.return_vector()
     # compare nearest neighbour to training data
-    cnt_type = check_distance(cnt_features)
+    cnt_type = check_distance(cnt_features, 3)
 
     # Draw and show results
     cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 3)
