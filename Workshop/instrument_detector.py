@@ -62,6 +62,7 @@ def close_image(input_image, e_kernel, d_kernel):
 
 # Check distance
 def check_distance(test_data, k_size):
+    # TODO FIX FALSE POSITIVES
     # defining instruments, and the features
     instruments = ['guitar', 'bass', 'trumpet', 'drumm']
     feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'thiness', 'intensity']
@@ -84,6 +85,12 @@ def check_distance(test_data, k_size):
     bass_distance = sorted((np.sqrt(bass_distance)))
     trumpet_distance = sorted((np.sqrt(trumpet_distance)))
     drumm_distance = sorted((np.sqrt(drumm_distance)))
+
+    # Checking to see if the contour is an instrument
+    # Break if it is not
+    dist = sorted(np.concatenate((guitar_distance,trumpet_distance,bass_distance,drumm_distance), axis=None))
+    if dist[0]+dist[1]+[dist[2]] >= 2:
+        return 0
 
     # Check for the k nearest and return which is more common
     for i in range(k_size):
@@ -116,15 +123,17 @@ def check_distance(test_data, k_size):
 
 
 # define amount of pictures to import
-n_pics = 8
+n_pics = 9
 
 for i in range(n_pics):
+
     # Read folder and import images
     img = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg')
     grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg', cv.IMREAD_GRAYSCALE)
     image_copy = img.copy()
 
     # Image processing
+    # TODO apply to a real scenario instead of a white background
     hsvImg = cv.cvtColor(img, cv.COLOR_BGR2HLS)
     blur = cv.medianBlur(hsvImg, 7)
     # HSL thresholding is used due to the background always being white
@@ -138,31 +147,25 @@ for i in range(n_pics):
     # Extract contours
     contours, hierarchy = cv.findContours(image=threshold, mode=cv.RETR_TREE, method=cv.CHAIN_APPROX_NONE)
     hierarchy = hierarchy[0]
+    for n in range(len(contours)):
+        cnt = contours[n]
+        # Make sure the contour has an area and is "parentless" :(
+        if cv.contourArea(cnt) > threshold.shape[0]*threshold.shape[1]*0.01 and np.array(hierarchy[n][3] == -1):
+            # If statement looking at how many children the contour has
+            holes = hierarchy[np.array(hierarchy[:][:, 3] == n)]
 
-    # Find the largest contour
-    outer = 0
-    largest_a = 0
-    for n in range(len(hierarchy)):
-        if np.array(hierarchy[n][3] == -1):
-            a = cv.contourArea(contours[n])
-            if largest_a < a:
-                largest_a = a
-                outer = n
-    cnt = contours[outer]
+            # Save data into the feature class
+            f = Features(cnt, len(holes), grey)
+            cnt_features = f.return_vector()
+            # compare nearest neighbour to training data
+            cnt_type = check_distance(cnt_features, 3)
+            if cnt_type != 0:
+                # Draw and show results
+                x, y, w, h = cv.boundingRect(cnt)
+                cv.drawContours(image_copy, cnt, -1, (255, 100, 100), 3)
+                cv.putText(image_copy, f'{cnt_type}', (x+int(w/2)-int(12*len(cnt_type)), y+int(h/2)), cv.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3, cv.LINE_AA)
 
-    # If statement looking at how many children the contour has
-    holes = hierarchy[np.array(hierarchy[:][:, 3] == outer)]
-    print(f'holes: {len(holes)}')
 
-    # Save data into the feature class
-    f = Features(cnt, len(holes), grey)
-    cnt_features = f.return_vector()
-    # compare nearest neighbour to training data
-    cnt_type = check_distance(cnt_features, 3)
-
-    # Draw and show results
-    cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 3)
-    cv.putText(image_copy, f'{cnt_type}', (15,35), cv.FONT_HERSHEY_PLAIN, 3, (0,0,255), 3, cv.LINE_AA)
     resize_image(image_copy, f'Instrument{i+1} result', 0.8)
 
 cv.waitKey(0)
