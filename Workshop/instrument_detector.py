@@ -1,4 +1,3 @@
-from pathlib import Path
 import cv2 as cv
 import numpy as np
 import json
@@ -67,59 +66,36 @@ def check_distance(test_data, k_size):
     instruments = ['guitar', 'bass', 'trumpet', 'drumm']
     feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'thiness', 'intensity']
     instrument_data = []
-    guitar_distance, bass_distance, trumpet_distance, drumm_distance = 0, 0, 0, 0
-    a = [0, 0, 0, 0]
+    dist = []
 
     # Load data from training set
     for instrument in instruments:
         instrument_data.append(json.load(open(f'./training_data/data_{instrument}.json', 'r')))
 
     # Calculate nearest neighbour
-    for num in range(len(feature_data)):
-        guitar_distance += (pow(test_data[num]-np.array(instrument_data[0][feature_data[num]], dtype='float64'), 2))
-        bass_distance += (pow(test_data[num]-np.array(instrument_data[1][feature_data[num]], dtype='float64'), 2))
-        trumpet_distance += (pow(test_data[num] - np.array(instrument_data[2][feature_data[num]], dtype='float64'), 2))
-        drumm_distance += (pow(test_data[num] - np.array(instrument_data[3][feature_data[num]], dtype='float64'), 2))
-    # Sort data
-    guitar_distance = sorted((np.sqrt(guitar_distance)))
-    bass_distance = sorted((np.sqrt(bass_distance)))
-    trumpet_distance = sorted((np.sqrt(trumpet_distance)))
-    drumm_distance = sorted((np.sqrt(drumm_distance)))
+    for i in range(len(instruments)):
+        temp_distance = 0
+        for num in range(len(feature_data)):
+            temp_distance += (pow(test_data[num]-np.array(instrument_data[i][feature_data[num]], dtype='float64'), 2))
+        # square that
+        dist.append(np.sqrt(temp_distance))
+    # need my distances in a vector not an array
+    dist = np.concatenate(dist, axis=None)
 
-    # Checking to see if the contour is an instrument
-    # Break if it is not
-    dist = sorted(np.concatenate((guitar_distance,trumpet_distance,bass_distance,drumm_distance), axis=None))
-    if dist[0]+dist[1]+[dist[2]] >= 2:
+    # Checking to see if the contour is an instrument, return if it is not
+    sorted_dist = np.sort(dist, axis=None)
+    if sorted_dist[0]+sorted_dist[1]+sorted_dist[2] >= 2:
         return 0
 
-    # Check for the k nearest and return which is more common
+    # check the k-size smallest distances and save their index
+    maxvalues_index = []
     for i in range(k_size):
-        if guitar_distance[0] < bass_distance[0] and guitar_distance[0] < trumpet_distance[0] and guitar_distance[0] < drumm_distance[0]:
-            guitar_distance.remove(guitar_distance[0])
-            a[0] += 1
-        elif bass_distance[0] < guitar_distance[0] and bass_distance[0] < trumpet_distance[0] and bass_distance[0] < drumm_distance[0]:
-            bass_distance.remove(bass_distance[0])
-            a[1] += 1
-        elif trumpet_distance[0] < guitar_distance[0] and trumpet_distance[0] < bass_distance[0] and trumpet_distance[0] < drumm_distance[0]:
-            trumpet_distance.remove(trumpet_distance[0])
-            a[2] += 1
-        else:
-            drumm_distance.remove(drumm_distance[0])
-            a[3] += 1
-
-    # This is a bit messy, but my tiny brain can't think of a nicer way
-    if a[0] > a[1] and a[0] > a[2] and a[0] > a[3]:
-        print(f'guitar chance: {a[0]} / {k_size}')
-        return "guitar"
-    elif a[1] > a[0] and a[1] > a[2] and a[1] > a[3]:
-        print(f'bass chance: {a[1]} / {k_size}')
-        return "bass"
-    elif a[2] > a[0] and a[2] > a[1] and a[2] > a[3]:
-        print(f'trumpet chance: {a[2]} / {k_size}')
-        return "trumpet"
-    else:
-        print(f'drumm chance: {a[3]} / {k_size}')
-        return 'drumm'
+        maxvalues_index.append(np.where(dist == sorted_dist[i])[0][0])
+    # compare the index to the instrument number and count the amounts in each
+    a = []
+    for i in range(len(instruments)):
+        a.append(sum(1 for n in maxvalues_index if n > (i) * 15 - 1 and n <= (i + 1) * 15 - 1))
+    return instruments[a.index(max(a))]
 
 
 # define amount of pictures to import
@@ -128,8 +104,8 @@ n_pics = 9
 for i in range(n_pics):
 
     # Read folder and import images
-    img = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg')
-    grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/{str(i + 1)}.jpg', cv.IMREAD_GRAYSCALE)
+    img = cv.imread(f'./materialer/{str(i + 1)}.jpg')
+    grey = cv.imread(f'./materialer/{str(i + 1)}.jpg', cv.IMREAD_GRAYSCALE)
     image_copy = img.copy()
 
     # Image processing

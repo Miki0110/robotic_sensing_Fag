@@ -1,4 +1,3 @@
-from pathlib import Path
 import cv2 as cv
 import numpy as np
 import json
@@ -78,8 +77,8 @@ for instrument in instruments:
 
     # Go through the training data 1 by 1
     for i in range(n_pics):
-        picture = cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg')
-        grey = cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE)
+        picture = cv.imread(f'./materialer/training_data/{instrument}/{instrument}{i+1}.jpg')
+        grey = cv.imread(f'./materialer/training_data/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE)
 
         # Image processing
         hsvImg = cv.cvtColor(picture, cv.COLOR_BGR2HLS)
