@@ -20,7 +20,6 @@ class Features:
         self.circularity = (4 * np.pi * area / (perimeter**2))
         self.compactness = (area / (min_width * min_height))
         self.elongation = (min(min_width, min_height) / max(min_width, min_height)*2)
-        self.thiness = ((4 * np.pi * area) / (perimeter**2)*2)
 
         # Intensity found in the image
         mask = np.zeros(img.shape, np.uint8)
@@ -40,21 +39,23 @@ class Features:
 def check_chance(x):
     instruments = ['bass', 'guitar', 'trumpet', 'drumm']
     chance = []
-    chance.append(1/np.sqrt(2*np.pi*dat.detsigma1)*np.exp(-0.5*(x-dat.mu1).dot(dat.invsigma1.dot((x-dat.mu1).T))))
-    chance.append(1/np.sqrt(2*np.pi*dat.detsigma2)*np.exp(-0.5*(x-dat.mu2).dot(dat.invsigma2.dot((x-dat.mu2).T))))
-    chance.append(1/np.sqrt(2*np.pi*dat.detsigma3)*np.exp(-0.5*(x-dat.mu3).dot(dat.invsigma3.dot((x-dat.mu3).T))))
-    chance.append(1/np.sqrt(2*np.pi*dat.detsigma4)*np.exp(-0.5*(x-dat.mu4).dot(dat.invsigma4.dot((x-dat.mu4).T))))
+    chance.append((1/np.sqrt(2*np.pi*dat.detsigma1)*np.exp(-0.5*(x-dat.mu1).dot(dat.invsigma1.dot((x-dat.mu1).T))))[0][0])
+    chance.append((1/np.sqrt(2*np.pi*dat.detsigma2)*np.exp(-0.5*(x-dat.mu2).dot(dat.invsigma2.dot((x-dat.mu2).T))))[0][0])
+    chance.append((1/np.sqrt(2*np.pi*dat.detsigma3)*np.exp(-0.5*(x-dat.mu3).dot(dat.invsigma3.dot((x-dat.mu3).T))))[0][0])
+    chance.append((1/np.sqrt(2*np.pi*dat.detsigma4)*np.exp(-0.5*(x-dat.mu4).dot(dat.invsigma4.dot((x-dat.mu4).T))))[0][0])
     #If the probability is low don't return anything
-    if max(chance) <= 0.5:
+
+    if max(chance) <= 0.5: # This is a completly random number but it works
         return 0
     # Return the highest probability
+    print(f'{max(chance)} possibility its a {instruments[chance.index(max(chance))]}')
     return instruments[chance.index(max(chance))]
 
 # A function that allows me to display an image an resize it
 def resize_image(image, image_name, procent):
     [height, width] = [image.shape[0],image.shape[1]]
     [height, width] = [procent*height, procent*width]
-    cv.namedWindow(image_name, cv.WINDOW_NORMAL)
+    cv.namedWindow(image_name, cv.WINDOW_GUI_EXPANDED)
     cv.resizeWindow(image_name, int(width), int(height))
     cv.imshow(image_name, image)
 
@@ -69,7 +70,7 @@ def close_image(input_image, e_kernel, d_kernel):
     return e_out
 
 # define amount of pictures to import
-n_pics = 9
+n_pics = 19
 
 for i in range(n_pics):
 
@@ -110,8 +111,10 @@ for i in range(n_pics):
                 x, y, w, h = cv.boundingRect(cnt)
                 cv.drawContours(image_copy, cnt, -1, (255, 100, 100), 3)
                 cv.putText(image_copy, f'{cnt_type}', (x+int(w/2)-int(12*len(cnt_type)), y+int(h/2)), cv.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3, cv.LINE_AA)
+            else:
+                cv.drawContours(image_copy, cnt, -1, (20, 20, 150), 2)
 
 
     resize_image(image_copy, f'Instrument{i+1} result', 0.8)
-
-cv.waitKey(0)
+    cv.waitKey(0)
+    cv.destroyWindow(f'Instrument{i+1} result')

@@ -53,26 +53,29 @@ class Features:
 # importing the pictures
 instruments = ['guitar', 'bass', 'trumpet', 'drumm']
 instrument = instruments[3]
-PicNum = 4
-n_pics = 15
+PicNum = 1
+n_pics = 1
 pictures = []
 grey = []
 
 for i in range(n_pics):
-    pictures.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg'))
+    print('C:/Users/Muku/Documents/robotic_sensing_Fag/Workshop/materialer/unknown.png')
+    print(f'{Path.cwd().parent.as_posix()}/Workshop/materialer/unknown.png')
+    pictures = (cv.imread(f'{Path.cwd().parent.as_posix()}/Workshop/materialer/unknown1.png'))
+    print(pictures.size)
     #grey.append(cv.imread(f'{Path.cwd().as_posix()}/materialer/training_data/{instrument}/{instrument}{i+1}.jpg', cv.IMREAD_GRAYSCALE))
 
 #blur = cv.medianBlur(grey[PicNum], 21)
-hsvImg = cv.cvtColor(pictures[PicNum], cv.COLOR_BGR2HLS)
-blurC = cv.medianBlur(hsvImg, 21)
-sensitivity = 20
+hsvImg = cv.cvtColor(pictures, cv.COLOR_BGR2HLS)
+blurC = hsvImg#cv.medianBlur(hsvImg, 21)
+sensitivity = 3
 thresholdcolor = cv.inRange(blurC, np.array([0,0,0]), np.array([255,255-sensitivity,255]))
 #ret, threshold = cv.threshold(blur, 225, 255, cv.THRESH_BINARY_INV)
-opened = open_image(thresholdcolor, cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5)),
-                    cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15)))
-contours, hierarchy = cv.findContours(image=opened, mode=cv.RETR_CCOMP, method=cv.CHAIN_APPROX_NONE)
+#opened = open_image(thresholdcolor, cv.getStructuringElement(cv.MORPH_ELLIPSE, (20, 20)),
+                   # cv.getStructuringElement(cv.MORPH_ELLIPSE, (20, 20)))
+contours, hierarchy = cv.findContours(image=thresholdcolor, mode=cv.RETR_CCOMP, method=cv.CHAIN_APPROX_NONE)
 hierarchy = hierarchy[0]
-image_copy = pictures[PicNum].copy()
+image_copy = pictures.copy()
 
 outer = 0
 largest_a = 0
@@ -101,7 +104,7 @@ cv.drawContours(image_copy, cnt, -1, (255, 0, 0), 5)
 #     f.elongation = max(box.size.width / box.size.height, box.size.height / box.size.width)
 resize_image(blurC, 'blur', 0.4)
 resize_image(thresholdcolor, 'threshold', 0.4)
-resize_image(opened, 'opened', 0.4)
+#resize_image(opened, 'opened', 0.4)
 resize_image(image_copy, 'final', 0.4)
 cv.waitKey(0)
 

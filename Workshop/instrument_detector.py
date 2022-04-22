@@ -20,7 +20,6 @@ class Features:
         self.circularity = (4 * np.pi * area / (perimeter**2))
         self.compactness = (area / (min_width * min_height))
         self.elongation = (min(min_width, min_height) / max(min_width, min_height)*2)
-        self.thiness = ((4 * np.pi * area) / (perimeter**2)*2)
 
         # Intensity found in the image
         mask = np.zeros(img.shape, np.uint8)
@@ -34,12 +33,11 @@ class Features:
         feature_vector.append(self.circularity)
         feature_vector.append(self.compactness)
         feature_vector.append(self.elongation)
-        feature_vector.append(self.thiness)
         feature_vector.append(self.intensity)
         return feature_vector
 
 
-# A function that allows me to display an image an resize it
+# A function that allows me to display an image and resize it
 def resize_image(image, image_name, procent):
     [height, width] = [image.shape[0],image.shape[1]]
     [height, width] = [procent*height, procent*width]
@@ -64,7 +62,7 @@ def check_distance(test_data, k_size):
     # TODO FIX FALSE POSITIVES
     # defining instruments, and the features
     instruments = ['guitar', 'bass', 'trumpet', 'drumm']
-    feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'thiness', 'intensity']
+    feature_data = ['holes', 'circularity', 'compactness', 'elongation', 'intensity']
     instrument_data = []
     dist = []
 
@@ -99,7 +97,7 @@ def check_distance(test_data, k_size):
 
 
 # define amount of pictures to import
-n_pics = 9
+n_pics = 19
 
 for i in range(n_pics):
 
@@ -140,8 +138,12 @@ for i in range(n_pics):
                 x, y, w, h = cv.boundingRect(cnt)
                 cv.drawContours(image_copy, cnt, -1, (255, 100, 100), 3)
                 cv.putText(image_copy, f'{cnt_type}', (x+int(w/2)-int(12*len(cnt_type)), y+int(h/2)), cv.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3, cv.LINE_AA)
+            else:
+                cv.drawContours(image_copy, cnt, -1, (20, 20, 150), 2)
 
 
     resize_image(image_copy, f'Instrument{i+1} result', 0.8)
+    cv.waitKey(0)
+    cv.destroyWindow(f'Instrument{i + 1} result')
 
-cv.waitKey(0)
+
